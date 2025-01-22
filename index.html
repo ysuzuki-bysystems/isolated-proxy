@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf8" />
+    <title>次世代新高機能排他通信可否制御装置計算システム</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>📺</text></svg>">
+    <style>:root { font-size: calc(100vw/24); p { margin: 1rem; text-indent: 1em; } }</style>
+  </head>
+  <body>
+    <p><output></output></p>
+	  <script type="module">
+async function process() {
+  const res = await fetch("./api/who");
+  if (!res.ok) {
+    throw new Error(`${res.status}: ${res.statusText}`);
+  }
+
+  const { uses } = await res.json();
+
+  if (typeof uses === "undefined") {
+    return "空いています。";
+  }
+
+  return `${uses.name ?? "誰か"} さんが ${uses.computer ?? "何か"} を使ってアクセス中です。(${new Intl.DateTimeFormat([], { dateStyle: "full", timeStyle: "full" }).format(new Date(uses.since ?? 0))} 頃から)`;
+}
+
+const text = await process().catch(e => {
+  console.error(e);
+  return "エラーが発生しました";
+});
+document.querySelector("output").textContent = text;
+	  </script>
+  </body>
+</html>
